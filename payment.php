@@ -54,17 +54,29 @@ if(isset($_POST['room'])){
     $latest = $connection->lastInsertId();
 
     if ($callback){ ?>
-
+    <div class="col-sm-5 col-md-5 col-lg-5">
+        
+      
         <form method="post" action="<?=$_SERVER['PHP_SELF'];?>" id="secure_p" name="secure_p">
-            <label for="">Card type<input type="text" name="c_type"></label>
-            <label for="">Card Serial<input type="text" maxlength="16" name="card"></label>
-            <label for="">Expiration date<input type="date" name="exp">
+                <label for="">Card type:</label>
+            <div class="form-group">        
+                <input type="text" class="form-control" name="c_type">
+            </div>
+                <label for="">Card Serial</label>
+            <div class="form-group">       
+                <input type="text" class="form-control" maxlength="16" name="card">
+            </div>       
+                <label for="">Expiration date</label>
+            <div class="form-group">
+                <input type="date"  class="form-control" name="exp">
+            </div>    
                 <input type="hidden" name="booking_id" value="<?php echo $latest?>">
-            </label>
-            <input type="submit" value="confirm">
+            <div class="form-group">    
+                <input type="submit" value="confirm" class="btn btn-info">
+            </div>    
         </form>
 
-
+    </div> 
     <?php  }
 }
 
@@ -153,7 +165,12 @@ elseif (isset($_POST['card']))
         $callback3 = payment_validation($_POST);
 
         if($callback3){
-            echo "thanks for your reservation";
+            echo "<div class='alert alert-info' style='max-width:20em'>
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+                       &times;
+                    </button>
+                      thanks for your reservation
+                  </div>";
 
         }
        else{

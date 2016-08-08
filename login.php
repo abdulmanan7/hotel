@@ -29,7 +29,8 @@ if ( isset( $_POST[ 'email' ] ) )
     $user = check_user($_POST);
 
 
-if ($user) {
+if ($user) 
+   {
 
     session_start();
 
@@ -38,11 +39,11 @@ if ($user) {
 
 
     header( "location: home.php" );
-}
-else
-{
+   }
+   else
+   {
     echo "wrong user informations <a href='home.php'>try again</a>";
-}
+   }
 }
 
 

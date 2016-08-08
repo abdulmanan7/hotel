@@ -35,7 +35,7 @@ if  (isset($_GET['id']))
             echo "<form method='post' action='".$_SERVER['PHP_SELF']."' id='charge' name='charge' style='float:left; margin:0px 100px;'>";
 
 
-            echo "<h4>Hotel:".$room["hotel_name"]."</h4>" ;
+            echo "<h4 style='color:red'>Hotel: ".$room["hotel_name"]."</h4>" ;
             echo "<p>";
             echo "room type : ".$room['room_space']." people";
             echo "<br/>";
@@ -43,7 +43,7 @@ if  (isset($_GET['id']))
             echo "</p>";
 
             echo "
-            <select name='guests' id='guests' required>
+            <select name='guests' class='form-control' id='guests' required>
                 <option value='0'>Guest(s)</option>
 
                 <option value='1'>1</option>
@@ -54,8 +54,8 @@ if  (isset($_GET['id']))
                 <option value='6'>6+</option>
 
             </select>
-
-            <select name='room' id='room' required>
+              <br>  
+            <select name='room' class='form-control' id='room' required>
                 <option value='0'>Room(s)</option>
 
                 <option value='1'>1</option>
@@ -66,9 +66,8 @@ if  (isset($_GET['id']))
 
             </select>"; ?>
 
-            <br/>
         <br/>
-        <select class="form-control" name="nights" id="nights" required>
+        <select class="form-control" class="form-control" name="nights" id="nights" required>
                 <option value="0">Night(s)</option>
 
                 <option value='1'>1</option>
@@ -83,10 +82,11 @@ if  (isset($_GET['id']))
                     <br/>
                     <br/>
 
-            <input type="date" name="checkin">
-    <input type="hidden" name="room_id" value="<?php echo $room['room_id'];?>">
-    <input type='hidden' name='hotel' value='<?php echo $_GET['id']; ?>'/>
-    <input type='submit' value='Submit'/>
+            <input type="date" class="form-control" name="checkin">
+            <input type="hidden" name="room_id" class="form-control" value="<?php echo $room['room_id'];?>">
+            <input type='hidden' name='hotel' class="form-control" value='<?php echo $_GET['id']; ?>'/>
+            <br>
+            <input type='submit' value='Submit' class="btn btn-info"/>
 
     </form>
 <?php
@@ -132,9 +132,7 @@ else{
 
         echo "<h4>payment info </h4>";
         echo "<br/>";
-        echo "<br/>";
         echo "Total due : ";
-        echo "<br/>";
         echo "<br/>";
         echo $price['Bill']."&pound;";
 
@@ -147,7 +145,7 @@ else{
             <input type="hidden" name="checkin" value="<?php echo $_POST['checkin'];?>"/>
             <input type="hidden" name="hotel" value="<?php echo $_POST['hotel'];?>"/>
             <input type="hidden" name="price" value="<?php echo $price['Bill'];?>"/>
-            <input type="submit" value="Confirm">
+            <input type="submit" value="Confirm" class="btn btn-info">
         </form>
 <?php
 
