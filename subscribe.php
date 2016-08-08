@@ -1,9 +1,9 @@
-<?php include_once("connect.php");
+<?php include_once "connect.php";
 
-if(!isset($_POST["email"])) {
-    ?>
+if (!isset($_POST["email"])) {
+	?>
 
-    <?php include_once('header.php');?>
+    <?php include_once 'header.php';?>
     <div class="container">
 
 
@@ -40,74 +40,56 @@ if(!isset($_POST["email"])) {
 
     </div>
 
-    <?php include_once('footer.php');
+    <?php include_once 'footer.php';
 
+	//  require_once('lib/php_self.php');
+	//  $return = https_php_self();
+} else {
 
-    //  require_once('lib/php_self.php');
-  //  $return = https_php_self();
-}
+	function add_submit() {
 
-else
-{
+		global $connection;
 
+		$name = mysql_real_escape_string($_POST["name"]);
+		$fname = mysql_real_escape_string($_POST["fname"]);
+		$login = mysql_real_escape_string($_POST["login"]);
+		$pwd = mysql_real_escape_string($_POST["password"]);
+		$email = mysql_real_escape_string($_POST["email"]);
+		$phone = mysql_real_escape_string($_POST["phone"]);
 
-    function add_submit(){
-
-        global $connection;
-
-        $name = $_POST["name"];
-        $fname = $_POST["fname"];
-        $login = $_POST["login"];
-        $pwd = $_POST["password"];
-        $email = $_POST["email"];
-        $phone = $_POST["phone"];
-
-
-
-
-        try
-        {
-            $query = $connection->prepare("insert into hl_users
+		try
+		{
+			$query = $connection->prepare("insert into hl_users
 				(user_name, user_firstname, user_login, user_email, user_password, user_phone)
 				values(:username, :fname, :login, :email, :pwd, :phone)");
 
-            $query->execute(array(
-                'username' => $name,
-                'fname' => $fname,
-                'login' => $login,
-                'email' => $email,
-                'pwd' => $pwd,
-                'phone' => $phone
+			$query->execute(array(
+				'username' => $name,
+				'fname' => $fname,
+				'login' => $login,
+				'email' => $email,
+				'pwd' => $pwd,
+				'phone' => $phone,
 
-            ));
+			));
 
+			return true;
 
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			echo "try again";
+			return false;
+		}
+	}
 
-            return true;
+	$callback = add_submit($_POST);
 
-        }
-        catch (Exception $e)
-        {
-            echo $e->getMessage();
-            echo "try again";
-            return false;
-        }
-    }
+	if ($callback) {
+		header("location: home.php");
+		echo "subscribe ok";
+	} else {
+		echo "problem encountered, try again";
 
-    $callback = add_submit($_POST);
+	}
 
-    if($callback)
-    {
-        header( "location: home.php" );
-        echo "subscribe ok";
-    }
-
-    else
-    {
-        echo "problem encountered, try again";
-
-    }
-
-
-    }
-
+}

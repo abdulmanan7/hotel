@@ -6,3 +6,6 @@
    margin-bottom:0.7em; 
    padding-left :1em; 
 }
+.error{
+    border: 2px solid red;
+}

@@ -1,186 +1,156 @@
 <?php
-include_once('header.php');
+include_once 'header.php';
 
+if (isset($_POST['room'])) {
 
-if(isset($_POST['room'])){
+	function booking_submit() {
 
+		global $connection;
 
+		$room_nb = mysql_real_escape_string($_POST['room']);
+		$guests = mysql_real_escape_string($_POST['guests']);
+		$nights = mysql_real_escape_string($_POST["nights"]);
+		$checkin = mysql_real_escape_string($_POST["checkin"]);
+		$hotel = mysql_real_escape_string($_POST["hotel"]);
+		$user = mysql_real_escape_string($_SESSION["user_id"]);
+		$price = mysql_real_escape_string($_POST["price"]);
 
-    function booking_submit(){
-
-        global $connection;
-
-        $room_nb= $_POST['room'];
-        $guests= $_POST['guests'];
-        $nights = $_POST["nights"];
-        $checkin = $_POST["checkin"];
-        $hotel = $_POST["hotel"];
-        $user = $_SESSION["user_id"];
-        $price = $_POST["price"];
-
-
-
-        try
-        {
-            $query = $connection->prepare("insert into hl_booking
+		try
+		{
+			$query = $connection->prepare("insert into hl_booking
 				(booking_room_nb, booking_gest_nb, booking_checkin, booking_nights, booking_price, hl_users_user_id, hl_hotel_hotel_id)
 				values(:room_nb, :guests, :checkin, :nights, :price, :user_id, :hotel )");
 
-            $query->execute(array(
-                'room_nb' => $room_nb,
-                'guests' => $guests,
-                'nights' => $nights,
-                'checkin' => $checkin,
-                'hotel' => $hotel,
-                'user_id' => $user,
-                'price' => $price
+			$query->execute(array(
+				'room_nb' => $room_nb,
+				'guests' => $guests,
+				'nights' => $nights,
+				'checkin' => $checkin,
+				'hotel' => $hotel,
+				'user_id' => $user,
+				'price' => $price,
 
-            ));
+			));
 
+			return true;
 
-            return true;
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			echo "try again";
+			return false;
+		}
+	}
 
-        }
-        catch (Exception $e)
-        {
-            echo $e->getMessage();
-            echo "try again";
-            return false;
-        }
-    }
+	$callback = booking_submit($_POST);
 
-    $callback = booking_submit($_POST);
+	$latest = $connection->lastInsertId();
 
-    $latest = $connection->lastInsertId();
-
-    if ($callback){ ?>
+	if ($callback) {?>
     <div class="col-sm-5 col-md-5 col-lg-5">
-        
-      
+
+
         <form method="post" action="<?=$_SERVER['PHP_SELF'];?>" id="secure_p" name="secure_p">
                 <label for="">Card type:</label>
-            <div class="form-group">        
+            <div class="form-group">
                 <input type="text" class="form-control" name="c_type">
             </div>
                 <label for="">Card Serial</label>
-            <div class="form-group">       
+            <div class="form-group">
                 <input type="text" class="form-control" maxlength="16" name="card">
-            </div>       
+            </div>
                 <label for="">Expiration date</label>
             <div class="form-group">
                 <input type="date"  class="form-control" name="exp">
-            </div>    
+            </div>
                 <input type="hidden" name="booking_id" value="<?php echo $latest?>">
-            <div class="form-group">    
+            <div class="form-group">
                 <input type="submit" value="confirm" class="btn btn-info">
-            </div>    
+            </div>
         </form>
 
-    </div> 
-    <?php  }
-}
+    </div>
+    <?php }
+} elseif (isset($_POST['card'])) {
+	function payment_submit() {
 
-elseif (isset($_POST['card']))
-{
-    function payment_submit(){
+		global $connection;
 
+		$card = mysql_real_escape_string($_POST['card']);
+		$card_type = mysql_real_escape_string($_POST['c_type']);
+		$exp = mysql_real_escape_string($_POST["exp"]);
+		$user = mysql_real_escape_string($_SESSION["user_id"]);
+		$latest = mysql_real_escape_string($_POST['booking_id']);
 
-        global $connection;
-
-        $card= $_POST['card'];
-        $card_type= $_POST['c_type'];
-        $exp = $_POST["exp"];
-        $user = $_SESSION["user_id"];
-        $latest = $_POST['booking_id'];
-
-
-
-        try
-        {
-            $query = $connection->prepare("insert into hl_users_infos
+		try
+		{
+			$query = $connection->prepare("insert into hl_users_infos
 				(user_credit_card, user_credit_card_type, hl_users_user_id, user_credit_card_exp, hl_booking_id)
 				values(:card, :card_type, :user_id, :exp, :booking )");
 
-            $query->execute(array(
-                'card' => $card,
-                'card_type' => $card_type,
-                'exp' => $exp,
-                'user_id' => $user,
-                'booking' => $latest
+			$query->execute(array(
+				'card' => $card,
+				'card_type' => $card_type,
+				'exp' => $exp,
+				'user_id' => $user,
+				'booking' => $latest,
 
-            ));
+			));
 
-            $_POST['latest'] = $connection->lastInsertId();
+			$_POST['latest'] = $connection->lastInsertId();
 
+			return true;
 
-            return true;
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			echo "try again";
+			return false;
+		}
+	}
 
-        }
-        catch (Exception $e)
-        {
-            echo $e->getMessage();
-            echo "try again";
-            return false;
-        }
-    }
+	$callback2 = payment_submit($_POST);
 
+	if ($callback2) {
 
+		function payment_validation() {
 
+			global $connection;
 
-    $callback2 = payment_submit($_POST);
+			try {
 
-
-    if($callback2) {
-
-        function payment_validation()
-        {
-
-            global $connection;
-
-
-
-
-            try {
-
-
-                $query = $connection->prepare("insert into hl_payment
+				$query = $connection->prepare("insert into hl_payment
 				(hl_users_infos_user_info_id)
 				values(:payment_infos )");
 
-                $query->execute(array(
-                    'payment_infos' => $_POST['latest']
+				$query->execute(array(
+					'payment_infos' => $_POST['latest'],
 
-                ));
+				));
 
+				return true;
 
-                return true;
+			} catch (Exception $e) {
+				echo $e->getMessage();
+				echo "try again";
+				return false;
+			}
+		}
 
-            } catch (Exception $e) {
-                echo $e->getMessage();
-                echo "try again";
-                return false;
-            }
-        }
+		$callback3 = payment_validation($_POST);
 
-        $callback3 = payment_validation($_POST);
-
-        if($callback3){
-            echo "<div class='alert alert-info' style='max-width:20em'>
+		if ($callback3) {
+			echo "<div class='alert alert-info' style='max-width:20em'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
                        &times;
                     </button>
                       thanks for your reservation
                   </div>";
 
-        }
-       else{
-           echo "We encountered a probleme during the payment process, check your infos and try again";
+		} else {
+			echo "We encountered a probleme during the payment process, check your infos and try again";
 
-       }
-    }
-
-        else{
-             echo "We encountered a probleme during the payment process, check your infos and try again";
-        }
+		}
+	} else {
+		echo "We encountered a probleme during the payment process, check your infos and try again";
+	}
 
 }

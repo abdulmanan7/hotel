@@ -1,57 +1,34 @@
 <div class="container">
 
             <?php
-            setcookie( "Remember"
-                     , ""
-                     , time() + 60*60
-                     , "/students"
-                     , "farthing.ex.ac.uk"
-                     , false
-                     , true );
-            ?>
+setcookie("Remember"
+	, ""
+	, time() + 60 * 60
+	, "/students"
+	, "farthing.ex.ac.uk"
+	, false
+	, true);
+?>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-    
-            <?php    
-            if ( isset( $_COOKIE[ 'TestCookie' ] ) )
-                {
-                   echo "<a href='#''>Welcome back!</a>";
-                } 
-                else 
-                {
-                   echo "";
-                }
-            ?>
-                
+
+            <?php
+if (isset($_COOKIE['TestCookie'])) {
+	echo "<a href='#''>Welcome back!</a>";
+} else {
+	echo "";
+}
+?>
+
 <?php
-     include('connect.php');
-     include_once('header.php');
+include 'connect.php';
+include_once 'header.php';
 
-            function display_cities()
-                {
-                  global $connection;
+$cities = select_query("hl_cities");
 
-                  try
-                    {
-                       $query = $connection->query("SELECT * FROM hl_cities");
-                       $cities = $query->fetchAll();
-                       return $cities;
-                    }
-                  catch (Exception $e)
-                    {
-                       return false;
-                    }
-                }
-           $cities = display_cities();
+if ($cities) {
 
-
-            if($cities)
-              {
-
-              //  require_once('lib/php_self.php');
-              //  $callback = https_php_self();
-
-               ?>
+	?>
 
 <div class="row">
     <h2 style="padding-left:15px;font-family:Lucida Console;color:#4d79ff">Place</h2>
@@ -60,11 +37,12 @@
                 <div class="form-group">
                     <select  name="cities" id="cities" class="form-control" required>
                         <option value="0">Choose a city</option>
-                        <?php foreach($cities as $city){ ?>
-                            <option value='<?php echo $city["city_id"]; ?>'><?php echo $city["city_name"]; ?></option>
-                        <?php } ?>
+                        <?php foreach ($cities as $city) {?>
+                            <option value='<?php echo $city["city_id"];?>'><?php echo $city["city_name"];?></option>
+                        <?php }
+	?>
                     </select>
-                </div>    
+                </div>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-4">
                 <div class="form-group">
@@ -77,42 +55,37 @@
                         <option value='5'>5</option>
                         <option value='6'>6+</option>
                     </select>
-                </div>    
+                </div>
             </div>
-            <div class="form-group">     
+            <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-info"/>
-            </div>    
+            </div>
         </form>
     </div>
 
 
 <?php
 }
-if  (isset($_POST['cities']))
-{
-    function get_hotel()
-    {
-        global $connection;
+if (isset($_POST['cities'])) {
+	function get_hotel() {
+		global $connection;
 
-        try
-        {
-            $query = $connection->query("SELECT * FROM hl_hotel
-                                        WHERE hl_cities_cities_id ='" . $_POST["cities"] . "'
-                                        and hotel_rooms >= '" . $_POST["rooms"] . "'");
-            $hotels = $query->fetchAll();
-            return $hotels;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
-    }
-    $hotels = get_hotel($_POST);
+		try
+		{
+			$query = $connection->query("SELECT * FROM hl_hotel
+                                        WHERE hl_cities_cities_id ='" . mysql_real_escape_string($_POST["cities"]) . "'
+                                        and hotel_rooms >= '" . mysql_real_escape_string($_POST["rooms"]) . "'");
+			$hotels = $query->fetchAll();
+			return $hotels;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+	$hotels = get_hotel($_POST);
 
-    foreach($hotels as $hotel)
-    {
-    ?>    
-        <div class="col-sm-8" style="padding-top:1.5em;">        
+	foreach ($hotels as $hotel) {
+		?>
+        <div class="col-sm-8" style="padding-top:1.5em;">
             <table class="table table-bordered table-hover">
                 <thead>
                    <th>
@@ -120,38 +93,60 @@ if  (isset($_POST['cities']))
                    </th>
                     <th>
                      Address
-                   </th> 
+                   </th>
                    <th>
                      Zip
                    </th>
                     <th>
                      Select this hotel
                    </th>
-                </thead>         
+                </thead>
                 <tbody>
                    <tr>
                      <td>
-              <?php echo "<a href='booking.php?id=".$hotel["hotel_id"]."'>" .$hotel['hotel_name']."</a>" ?>
+              <?php echo "<a href='booking.php?id=" . $hotel["hotel_id"] . "'>" . $hotel['hotel_name'] . "</a>"?>
                      </td>
                      <td>
-              <?php echo  $hotel['hotel_address']; ?>
+              <?php echo $hotel['hotel_address'];?>
                      </td>
                      <td>
-              <?php echo $hotel['hotel_zip']; ?>
+              <?php echo $hotel['hotel_zip'];?>
                      </td>
                      <td>
-              <?php echo "<a href='booking.php?id=".$hotel["hotel_id"]."'>Select this hotel</a>"; ?>
+              <?php echo "<a href='booking.php?id=" . $hotel["hotel_id"] . "'>Select this hotel</a>";?>
                      </td>
                    </tr>
-                         
-                </thbody>            
+
+                </thbody>
             </table>
-        </div>                 
-<?php     
-    }
+        </div>
+<?php
+}
 }
 ?>
 </div>
 </div>
-    <?php include_once('footer.php'); ?>
-    
+<?php include_once 'footer.php';?>
+<script>
+    jQuery(document).ready(function($) {
+        $(document).on('click', '#submit', function(event) {
+            event.preventDefault();
+        var error = false;
+        if ($('#email').val()=="") {
+            var error = true;
+            $('#email').addClass('error').focus(function(event) {
+                $(this).removeClass('error');
+            });
+        }else if($('#password').val()==""){
+            var error = true;
+            $('#password').addClass('error').focus(function(event) {
+                $(this).removeClass('error');
+            });
+        }else{
+            if (!error) {
+                $('form').submit();
+            }
+        }
+        });
+    });
+</script>
