@@ -1,3 +1,4 @@
+
 <?php
 include_once('header.php');
 
@@ -32,7 +33,9 @@ if  (isset($_GET['id']))
 
         foreach($rooms as $room){
 
-            echo "<form method='post' action='".$_SERVER['PHP_SELF']."' id='charge' name='charge' style='float:left; margin:0px 100px;'>";
+            
+
+            echo "<form method='post' action='".$_SERVER['PHP_SELF']."' id='charge' name='charge' style='float:left; margin:25px 100px 0px 10em;'>";
 
 
             echo "<h4 style='color:red'>Hotel: ".$room["hotel_name"]."</h4>" ;
@@ -89,6 +92,7 @@ if  (isset($_GET['id']))
             <input type='submit' value='Submit' class="btn btn-info"/>
 
     </form>
+
 <?php
 
         }
@@ -129,16 +133,18 @@ else{
         }
         $price = get_price($_POST);
 
-
+        
+        
+        echo "<div class='col-sm-4 col-sm-offset-4' style='margin-top:3em'>";
+        echo "<div class='panel panel-info'>
+                <div class='panel-body'>";
         echo "<h4>payment info </h4>";
-        echo "<br/>";
-        echo "Total due : ";
-        echo "<br/>";
-        echo $price['Bill']."&pound;";
-
-
+        // echo "<br/>";
+        echo "<h5 style='padding-top:1em'>Total due : <span class='badge'>".$price['Bill']."&pound;</span>";
+        
         ?>
-        <form method="post" action="payment.php">
+
+        <form method="post" action="payment.php" style="padding-top:1em">
             <input type="hidden" name="room" value="<?php echo $_POST['room'];?>"/>
             <input type="hidden" name="guests" value="<?php echo $_POST['guests'];?>"/>
             <input type="hidden" name="nights" value="<?php echo $_POST['nights'];?>"/>
@@ -147,6 +153,11 @@ else{
             <input type="hidden" name="price" value="<?php echo $price['Bill'];?>"/>
             <input type="submit" value="Confirm" class="btn btn-info">
         </form>
+ 
+          </div>
+        </div>
+      </div> 
+    </div>  
 <?php
 
 

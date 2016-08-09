@@ -54,7 +54,7 @@ if(isset($_POST['room'])){
     $latest = $connection->lastInsertId();
 
     if ($callback){ ?>
-    <div class="col-sm-5 col-md-5 col-lg-5">
+    <div class="col-sm-4 col-md-4 col-lg-4 col-lg-offset-3" style="margin-top:4em">
         
       
         <form method="post" action="<?=$_SERVER['PHP_SELF'];?>" id="secure_p" name="secure_p">
@@ -165,12 +165,14 @@ elseif (isset($_POST['card']))
         $callback3 = payment_validation($_POST);
 
         if($callback3){
-            echo "<div class='alert alert-info' style='max-width:20em'>
-                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                       &times;
-                    </button>
-                      thanks for your reservation
-                  </div>";
+            echo "<div class='col-sm-8 col-sm-offset-1' style='margin-top:2em'>
+                    <div class='alert alert-info'>
+                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+                          &times;
+                        </button>
+                        thanks for your reservation
+                    </div>
+                   </div> ";
 
         }
        else{

@@ -6,3 +6,15 @@
    margin-bottom:0.7em; 
    padding-left :1em; 
 }
+.form-control {
+    height: 30px !important;
+    padding: 3px 8px !important;
+    border-radius: 0 !important
+}
+.btn {
+    padding: 4px 8px;
+	border-radius: 0; 
+}
+.error{
+	color:red;
+}

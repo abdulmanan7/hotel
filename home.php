@@ -1,32 +1,10 @@
+<?php   include_once('header.php'); ?>
+
 <div class="container">
 
-            <?php
-            setcookie( "Remember"
-                     , ""
-                     , time() + 60*60
-                     , "/students"
-                     , "farthing.ex.ac.uk"
-                     , false
-                     , true );
-            ?>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-    
-            <?php    
-            if ( isset( $_COOKIE[ 'TestCookie' ] ) )
-                {
-                   echo "<a href='#''>Welcome back!</a>";
-                } 
-                else 
-                {
-                   echo "";
-                }
-            ?>
-                
 <?php
      include('connect.php');
-     include_once('header.php');
-
+   
             function display_cities()
                 {
                   global $connection;
