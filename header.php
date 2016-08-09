@@ -1,4 +1,7 @@
-<?php
+<?php function redirect($url = '') {
+	header("Location: $url"); /* Redirect browser */
+	exit;
+}
     setcookie( "TestCookie"
                 , "TestValue"
                 , time() + 5*60
@@ -29,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="assets/font-awsome/css/font-awesome.min.css">
 </head>
 <body style="background-image:linear-gradient(rgba((34, 27, 27, 0.3),rgba((34, 27, 27, 0.3)),url(assets/images/hotel.jpg);">
-
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -54,6 +56,3 @@
         </div><!-- /.navbar-collapse -->
     </div>
 </nav>
-
-
- 
