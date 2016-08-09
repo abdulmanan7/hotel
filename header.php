@@ -80,10 +80,11 @@ if (isset($_SESSION['username'])) {
 	?>
     <div class="container">
         <?php $error = get_message();
+	die($error);
 	if ($error != "") {?>
             <div class="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <strong>Error !</strong> <?=$$error?>
+                <strong>Error !</strong> <?=$error?>
             </div>
        <?php }
 	?>

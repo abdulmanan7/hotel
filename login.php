@@ -32,7 +32,7 @@ if (isset($_POST['email'])) {
 
 		header("location: home.php");
 	} else {
-		set_message("wrong user informations try again</a>");
+		set_message("wrong user informations try again");
 		redirect('home.php');
 	}
 }
