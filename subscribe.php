@@ -1,37 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscribe</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+</head>
+<body>
 <?php include_once("connect.php");
 
 if(!isset($_POST["email"])) {
     ?>
 
-    <?php include_once('header.php');?>
     <div class="container">
-
-
-        <div class="submit">
-            <h2>Subcribe</h2>
-
+        
+        <div class="row">      
+         <h2 id="submit" style="padding:0.5em 0em 0.5em 10em;border-bottom:1px solid #e0e0d1;">Subcribe</h2>
+        </div>  
+        <div class="col-sm-5 col-md-5 col-lg-5 col-lg-offset-3">
             <form method="post" action="<?=$_SERVER['PHP_SELF'];?>" id="subscribe" name="subscribe">
-                <div>
-                    <input id="name" name="name" class="submit-input" type="text" placeholder="Name"/>
+                <div class="form-group">
+                    <input id="name" name="name" class="form-control" type="text" placeholder="Name"/>
                 </div>
-                <div>
-                    <input id="fname" name="fname" class="submit-input" type="text" placeholder="Firstname"/>
+                <div class="form-group">
+                    <input id="fname" name="fname" class="form-control" type="text" placeholder="Firstname"/>
                 </div>
-                <div>
-                    <input id="login" name="login" class="submit-input" type="text" placeholder="Login"/>
+                <div class="form-group">
+                    <input id="login" name="login" class="form-control" type="text" placeholder="Login"/>
                 </div>
-                <div>
-                    <input id="password" name="password" class="submit-input" type="password"
+                <div class="form-group">
+                    <input id="password" name="password" class="form-control" type="password"
                            placeholder="Password"/>
                 </div>
-                <div>
-                    <input id="email" name="email" class="submit-input" type="email" placeholder="Email"/>
+                <div class="form-group">
+                    <input id="email" name="email" class="form-control" type="email" placeholder="Email"/>
                 </div>
-                <div>
-                    <input id="phone" name="phone" class="submit-input" type="tel" placeholder="Phone number"/>
+                <div class="form-group">
+                    <input id="phone" name="phone" class="form-control" type="tel" placeholder="Phone number"/>
                 </div>
 
-                <input type="submit" value="Submit" class="submit-button"/>
+                <input type="submit" value="Submit"  class="btn btn-info"/>
 
             </form>
 
@@ -40,9 +47,10 @@ if(!isset($_POST["email"])) {
 
     </div>
 
-    <?php include_once('footer.php');
+    <?php include_once('footer.php'); ?>
+  
 
-
+<?php
     //  require_once('lib/php_self.php');
   //  $return = https_php_self();
 }
@@ -68,8 +76,8 @@ else
         try
         {
             $query = $connection->prepare("insert into hl_users
-				(user_name, user_firstname, user_login, user_email, user_password, user_phone)
-				values(:username, :fname, :login, :email, :pwd, :phone)");
+                (user_name, user_firstname, user_login, user_email, user_password, user_phone)
+                values(:username, :fname, :login, :email, :pwd, :phone)");
 
             $query->execute(array(
                 'username' => $name,
@@ -111,3 +119,4 @@ else
 
     }
 
+    ?>
