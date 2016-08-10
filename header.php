@@ -2,21 +2,22 @@
 	header("Location: $url"); /* Redirect browser */
 	exit;
 }
-    setcookie( "TestCookie"
-                , "TestValue"
-                , time() + 5*60
-                , "/students"
-                , "farthing.ex.ac.uk"
-                , false
-                , true );
-    include_once("connect.php");
+error_reporting(0);
+setcookie("TestCookie"
+	, "TestValue"
+	, time() + 5 * 60
+	, "/students"
+	, "farthing.ex.ac.uk"
+	, false
+	, true);
+include_once "connect.php";
 
-    include_once('secure.php');
+include_once 'secure.php';
 
-    if(!isset($_SESSION['username']))
-     {
-       header("location:login.php");
-     }
+if (!isset($_SESSION['username'])) {
+	$_SESSION['message'] = "<p>Please login first to access</p>";
+	header("location:login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,13 +43,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Hotel Mangment System</a>
+            <a class="navbar-brand" href="home.php">Hotel Mangment System</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#"><?php echo $_SESSION['username']; ?></a></li>
+                <li class="active"><a href="#"><?php echo $_SESSION['username'];?></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

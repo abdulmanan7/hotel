@@ -1,51 +1,44 @@
 
 <?php
-include_once('header.php');
+include_once 'header.php';
 
-if  (isset($_GET['id']))
-{
-    function get_rooms()
-    {
-        global $connection;
+if (isset($_GET['id'])) {
+	function get_rooms() {
+		global $connection;
 
-        $id = $_GET["id"];
+		$id = mysql_escape_string($_GET["id"]);
 
-        try
-        {
-            $query = $connection->query("SELECT * FROM hl_rooms, hl_hotel
-                                        WHERE hl_hotel_hotel_id =".$id."
-                                        and hotel_id =".$id."");
-            $rooms = $query->fetchAll();
+		try
+		{
+			$query = $connection->query("SELECT * FROM hl_rooms, hl_hotel
+                                        WHERE hl_hotel_hotel_id =" . $id . "
+                                        and hotel_id =" . $id . "");
+			$rooms = $query->fetchAll();
 
-            return $rooms;
-        }
-        catch (Exception $e)
-        {
-            return false;
-        }
-    }
+			return $rooms;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
 
-    $rooms =  get_rooms($_GET);
+	$rooms = get_rooms($_GET);
 
-    if($rooms){
+	if ($rooms) {
 
+		foreach ($rooms as $room) {
+			echo "<form method='post' action='" . $_SERVER['PHP_SELF'] . "' id='charge' name='charge' style='float:left; margin:25px 100px 0px 10em;'>";
+			echo '<div class="panel panel-info">';
+			echo '<div class="panel-heading">';
+			echo "<h4 style='color:red'>Hotel: " . htmlentities($room["hotel_name"]) . "</h4>";
+			echo "</div>";
+			echo "<p>";
+			echo "<div class='panel-body'>";
+			echo "room type : " . htmlentities($room['room_space']) . " people";
+			echo "<br/>";
+			echo "room price : " . htmlentities($room['room_price']) . " &pound;	";
+			echo "</p>";
 
-
-        foreach($rooms as $room){
-
-            
-
-            echo "<form method='post' action='".$_SERVER['PHP_SELF']."' id='charge' name='charge' style='float:left; margin:25px 100px 0px 10em;'>";
-
-
-            echo "<h4 style='color:red'>Hotel: ".$room["hotel_name"]."</h4>" ;
-            echo "<p>";
-            echo "room type : ".$room['room_space']." people";
-            echo "<br/>";
-            echo "room price : ".$room['room_price']." &pound;	";
-            echo "</p>";
-
-            echo "
+			echo "
             <select name='guests' class='form-control' id='guests' required>
                 <option value='0'>Guest(s)</option>
 
@@ -57,7 +50,7 @@ if  (isset($_GET['id']))
                 <option value='6'>6+</option>
 
             </select>
-              <br>  
+              <br>
             <select name='room' class='form-control' id='room' required>
                 <option value='0'>Room(s)</option>
 
@@ -67,7 +60,7 @@ if  (isset($_GET['id']))
                 <option value='4'>4</option>
                 <option value='5'>5</option>
 
-            </select>"; ?>
+            </select>";?>
 
         <br/>
         <select class="form-control" class="form-control" name="nights" id="nights" required>
@@ -87,83 +80,66 @@ if  (isset($_GET['id']))
 
             <input type="date" class="form-control" name="checkin">
             <input type="hidden" name="room_id" class="form-control" value="<?php echo $room['room_id'];?>">
-            <input type='hidden' name='hotel' class="form-control" value='<?php echo $_GET['id']; ?>'/>
+            <input type='hidden' name='hotel' class="form-control" value='<?php echo $_GET['id'];?>'/>
             <br>
             <input type='submit' value='Submit' class="btn btn-info"/>
-
+</div>
+</div>
     </form>
 
 <?php
 
-        }
+		}
 
+	}
 
+} else {
 
+	if (isset($_POST["nights"])) {
 
+		function get_price() {
+			global $connection;
 
-    }
+			$room_nb = mysql_escape_string($_POST['room']);
+			$nights = mysql_escape_string($_POST['nights']);
 
-
-
-}
-
-else{
-
-     if(isset($_POST["nights"])){
-
-    function get_price()
-        {
-            global $connection;
-
-            $room_nb= $_POST['room'];
-            $nights = $_POST['nights'];
-
-            try
-            {
-                $query = $connection->query("SELECT SUM((room_price *".$room_nb.")* ".$nights.") as Bill FROM hl_rooms
+			try
+			{
+				$query = $connection->query("SELECT SUM((room_price *" . $room_nb . ")* " . $nights . ") as Bill FROM hl_rooms
                                             WHERE hl_hotel_hotel_id ='" . $_POST['hotel'] . "'
                                             and room_id = '" . $_POST["room_id"] . "'");
-                $price = $query->fetch();
-                return $price;
-            }
-            catch (Exception $e)
-            {
-                return false;
-            }
-        }
-        $price = get_price($_POST);
+				$price = $query->fetch();
+				return $price;
+			} catch (Exception $e) {
+				return false;
+			}
+		}
+		$price = get_price($_POST);
 
-        
-        
-        echo "<div class='col-sm-4 col-sm-offset-4' style='margin-top:3em'>";
-        echo "<div class='panel panel-info'>
+		echo "<div class='col-sm-4 col-sm-offset-4' style='margin-top:3em'>";
+		echo "<div class='panel panel-info'>
                 <div class='panel-body'>";
-        echo "<h4>payment info </h4>";
-        // echo "<br/>";
-        echo "<h5 style='padding-top:1em'>Total due : <span class='badge'>".$price['Bill']."&pound;</span>";
-        
-        ?>
+		echo "<h4>payment info </h4>";
+		// echo "<br/>";
+		echo "<h5 style='padding-top:1em'>Total due : <span class='badge'>" . htmlentities($price['Bill']) . "&pound;</span>";
+
+		?>
 
         <form method="post" action="payment.php" style="padding-top:1em">
-            <input type="hidden" name="room" value="<?php echo $_POST['room'];?>"/>
-            <input type="hidden" name="guests" value="<?php echo $_POST['guests'];?>"/>
-            <input type="hidden" name="nights" value="<?php echo $_POST['nights'];?>"/>
-            <input type="hidden" name="checkin" value="<?php echo $_POST['checkin'];?>"/>
-            <input type="hidden" name="hotel" value="<?php echo $_POST['hotel'];?>"/>
-            <input type="hidden" name="price" value="<?php echo $price['Bill'];?>"/>
+            <input type="hidden" name="room" value="<?php echo htmlentities($_POST['room']);?>"/>
+            <input type="hidden" name="guests" value="<?php echo htmlentities($_POST['guests']);?>"/>
+            <input type="hidden" name="nights" value="<?php echo htmlentities($_POST['nights']);?>"/>
+            <input type="hidden" name="checkin" value="<?php echo htmlentities($_POST['checkin']);?>"/>
+            <input type="hidden" name="hotel" value="<?php echo htmlentities($_POST['hotel']);?>"/>
+            <input type="hidden" name="price" value="<?php echo htmlentities($price['Bill']);?>"/>
             <input type="submit" value="Confirm" class="btn btn-info">
         </form>
- 
+
           </div>
         </div>
-      </div> 
-    </div>  
+      </div>
+    </div>
 <?php
 
-
-
-
-
-    }
+	}
 }
-

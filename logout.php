@@ -2,16 +2,11 @@
 <body>
 <?php
 session_start();
-
-
-
-if ( isset( $_SESSION['username' ] ) )
- {
-    unset( $_SESSION[ 'username' ] );
-
-    echo '';
+if (isset($_SESSION['username'])) {
+	unset($_SESSION['username']);
 }
-header("location:login.php?error=<p>You have successfully logged out.</p>");
+$_SESSION['msg'] = '<p>You have successfully logged out.</p>';
+header("location:login.php");
 ?>
 
 </body
