@@ -1,5 +1,12 @@
 <?php
 error_reporting(0);
+setcookie("TestCookie"
+	, "TestValue"
+	, time() + 1 * 60
+	, "/students"
+	, "farthing.ex.ac.uk"
+	, false
+	, true);
 include_once "connect.php";
 session_start();
 $message = isset($_SESSION['msg']) ? $_SESSION['msg'] : "";
@@ -20,7 +27,7 @@ session_destroy();
 
 
 </head>
-<body style="background-image:url(assets/images/bg-image.jpg">
+<body style="background:url(assets/images/bg-image.jpg)no-repeat center center fixed;">
 
   <div class="container">
     <div class="row">
@@ -73,7 +80,6 @@ session_destroy();
         </div>
     </div>
 </div>
-
 <?php include_once "footer.php";?>
 
 <?php
@@ -83,8 +89,7 @@ if (isset($_POST['email'])) {
 		global $connection;
 
 		$email = mysql_escape_string($_POST['email']);
-		$password = mysql_escape_string($_POST['password']);
-
+		$password = hash_password($_POST['password']);
 		try
 		{
 			$query = $connection->query("SELECT * FROM hl_users

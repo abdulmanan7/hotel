@@ -2,10 +2,10 @@
 	header("Location: $url"); /* Redirect browser */
 	exit;
 }
-error_reporting(0);
+// error_reporting(0);
 setcookie("TestCookie"
 	, "TestValue"
-	, time() + 5 * 60
+	, time() + 1 * 60
 	, "/students"
 	, "farthing.ex.ac.uk"
 	, false
@@ -32,7 +32,7 @@ if (!isset($_SESSION['username'])) {
     <!-- Font Awsome -->
     <link rel="stylesheet" type="text/css" href="assets/font-awsome/css/font-awesome.min.css">
 </head>
-<body style="background-image:linear-gradient(rgba((34, 27, 27, 0.3),rgba((34, 27, 27, 0.3)),url(assets/images/hotel.jpg);">
+<body style="background-image:url(assets/images/slide-hotel-gym-background.jpg">
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->

@@ -3,7 +3,7 @@
 <div class="container">
 
   <?php
-include 'connect.php';
+include_once 'connect.php';
 
 $cities_id = 0;
 $room_no = 0;

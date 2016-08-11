@@ -1,3 +1,8 @@
+<?php
+session_start();
+$message = isset($_SESSION['msg']) ? $_SESSION['msg'] : "";
+$error = isset($_SESSION['error']) ? $_SESSION['error'] : "";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +17,20 @@ if (!isset($_POST["email"])) {
 	?>
 
     <div class="container">
-
+		<?php if ($message): ?>
+          <div class="alert alert-success" style="margin-top:1em">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php unset($_SESSION['msg'])?>
+            <?=$message;?>
+          </div>
+        <?php endif?>
+        <?php if ($error): ?>
+          <div class="alert alert-success" style="margin-top:1em">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php unset($_SESSION['error'])?>
+            <?=$error;?>
+          </div>
+        <?php endif?>
         <div class="row">
          <h2 id="submit" style="padding:0.5em 0em 0.5em 10em;border-bottom:1px solid #e0e0d1;">Subscribe</h2>
         </div>
@@ -59,12 +77,12 @@ if (!isset($_POST["email"])) {
 
 		global $connection;
 
-		$name = mysql_escape_string($_POST["name"]);
-		$fname = mysql_escape_string($_POST["fname"]);
-		$login = mysql_escape_string($_POST["login"]);
-		$pwd = mysql_escape_string($_POST["password"]);
-		$email = mysql_escape_string($_POST["email"]);
-		$phone = mysql_escape_string($_POST["phone"]);
+		$name = htmlspecialchars($_POST["name"]);
+		$fname = htmlspecialchars($_POST["fname"]);
+		$login = htmlspecialchars($_POST["login"]);
+		$pwd = htmlspecialchars($_POST["password"]);
+		$email = htmlspecialchars($_POST["email"]);
+		$phone = htmlspecialchars($_POST["phone"]);
 
 		try
 		{
@@ -77,16 +95,19 @@ if (!isset($_POST["email"])) {
 				'fname' => $fname,
 				'login' => $login,
 				'email' => $email,
-				'pwd' => $pwd,
+				'pwd' => hash_password($pwd),
 				'phone' => $phone,
 
 			));
+			if (mysql_affected_rows() > 0) {
 
-			return true;
+				return true;
+			} else {
+				$_SESSION['error'] = '<p>problem encountered while inserting data, try again</p>';
+			}
 
 		} catch (Exception $e) {
-			echo $e->getMessage();
-			echo "try again";
+			$_SESSION['error'] = '<p>Error while connecting to database, try again</p>';
 			return false;
 		}
 	}
@@ -94,11 +115,11 @@ if (!isset($_POST["email"])) {
 	$callback = add_submit($_POST);
 
 	if ($callback) {
+		$_SESSION['msg'] = '<p>You have successfully Subscribe.</p>';
 		header("location: home.php");
-		echo "subscribe ok";
 	} else {
-		echo "problem encountered, try again";
-
+		$_SESSION['error'] = '<p>problem encountered, try again</p>';
+		header("location: subscribe.php");
 	}
 
 }

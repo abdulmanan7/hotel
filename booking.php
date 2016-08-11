@@ -1,4 +1,8 @@
-
+<style type="text/css">
+    body {
+   background: url("assets/images/ceb_home_bi.jpg") no-repeat center center fixed !important;
+}
+</style>
 <?php
 include_once 'header.php';
 

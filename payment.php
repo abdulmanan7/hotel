@@ -1,6 +1,5 @@
 <?php
 include_once 'header.php';
-
 if (isset($_POST['room'])) {
 
 	function booking_submit() {
@@ -46,29 +45,50 @@ if (isset($_POST['room'])) {
 	$latest = $connection->lastInsertId();
 
 	if ($callback) {?>
-    <div class="col-sm-4 col-md-4 col-lg-4 col-lg-offset-3" style="margin-top:4em">
+        <style type="text/css">
+            body {
+                color:#fff;
+                background: url("assets/images/bg3.jpg") no-repeat center center fixed !important;
+         }
+     </style>
+
+     <div class="col-sm-4 col-md-4 col-lg-4 col-lg-offset-3" style="margin-top:4em">
 
 
         <form method="post" action="<?=$_SERVER['PHP_SELF'];?>" id="secure_p" name="secure_p">
-                <label for="">Card type:</label>
+            <label for="">Card type:</label>
             <div class="form-group">
-                <input type="text" required="required" class="form-control" name="c_type">
+                <input type="text" required="required" class="form-control" name="c_type" id="c_type">
             </div>
-                <label for="">Card Serial</label>
+            <label for="">Card Serial</label>
             <div class="form-group">
-                <input type="text" required="required" class="form-control" maxlength="16" name="card">
+                <input type="text" required="required" class="form-control" maxlength="16" name="card" id="card">
             </div>
-                <label for="">Expiration date</label>
+            <label for="">Expiration date</label>
             <div class="form-group">
-                <input type="date" required="required" class="form-control" name="exp">
+                <input type="date" required="required" class="form-control" name="exp" id="expDate">
             </div>
-                <input type="hidden" name="booking_id" value="<?php echo $latest?>">
+            <input type="hidden" name="booking_id" value="<?php echo $latest?>">
             <div class="form-group">
                 <input type="submit" value="confirm" class="btn btn-info">
             </div>
         </form>
 
     </div>
+    <script type="text/javascript">
+    $(document).on('click', '#submit', function(event) {
+        event.preventDefault();
+        var card = $('#card').val();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {param1: 'value1'},
+    })
+    .done(function() {
+        alert("form successfully submited Thanks!");
+    });
+    });
+</script>
     <?php }
 } elseif (isset($_POST['card'])) {
 	function payment_submit() {
@@ -118,8 +138,8 @@ if (isset($_POST['room'])) {
 			try {
 
 				$query = $connection->prepare("insert into hl_payment
-				(hl_users_infos_user_info_id)
-				values(:payment_infos )");
+                    (hl_users_infos_user_info_id)
+                    values(:payment_infos )");
 
 				$query->execute(array(
 					'payment_infos' => mysql_escape_string($_POST['latest']),
@@ -139,13 +159,13 @@ if (isset($_POST['room'])) {
 
 		if ($callback3) {
 			echo "<div class='col-sm-8 col-sm-offset-1' style='margin-top:2em'>
-                    <div class='alert alert-info'>
-                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
-                          &times;
-                        </button>
-                        thanks for your reservation
-                    </div>
-                   </div> ";
+            <div class='alert alert-info'>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+                  &times;
+              </button>
+              thanks for your reservation
+          </div>
+      </div> ";
 
 		} else {
 			echo "We encountered a probleme during the payment process, check your infos and try again";
